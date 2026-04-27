@@ -1,280 +1,602 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Lokadjaya — Kedai Cozy & Playbox | Lamongan</title>
-  <meta name="description" content="Spot sarapan dan makan siang paling cozy di Lamongan. Nikmati hidangan lezat mulai jam 09.00 pagi bersama teman atau keluarga.">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            forest: { DEFAULT:'#2D5A27', dark:'#1E3D1A', light:'#3A7533' },
-            terracotta: { DEFAULT:'#CC5500', light:'#E86B10' },
-            cream: '#F5F5DC',
-            sand: '#E8DCC8',
-            charcoal: '#2C2C2C',
-          },
-          fontFamily: { heading:['Outfit','sans-serif'], body:['Inter','sans-serif'] },
-        },
-      },
-    }
-  </script>
-  <link rel="stylesheet" href="css/style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZV Dashboard — Financial Management System</title>
+    <meta name="description"
+        content="Sistem manajemen finansial pribadi & UMKM. Catat pemasukan, pengeluaran, dan pantau arus kas secara real-time.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        deep: '#020617',
+                        main: '#0F172A',
+                        card: '#1E293B',
+                        cyan: { DEFAULT: '#00F0FF', dim: 'rgba(0,240,255,0.15)' },
+                        rose: { DEFAULT: '#FF007F', dim: 'rgba(255,0,127,0.15)' },
+                        amber: '#FBBF24',
+                        emerald: '#34D399',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                },
+            },
+        }
+    </script>
+    <link rel="stylesheet" href="css/style.css">
 </head>
-<body class="font-body bg-cream" x-data>
 
-<!-- ===== NAVBAR ===== -->
-<nav class="fixed top-0 left-0 right-0 z-50 transition-all duration-500"
-     :class="$store.nav.scrolled ? 'nav-scrolled py-3' : 'glass-dark py-4'"
-     x-init="$store.nav.init()">
-  <div class="max-w-6xl mx-auto px-4 flex items-center justify-between">
-    <a href="#" class="flex items-center gap-2">
-      <div class="w-9 h-9 rounded-lg bg-terracotta flex items-center justify-center">
-        <span class="text-white font-heading font-bold text-lg">L</span>
-      </div>
-      <span class="text-white font-heading font-bold text-xl tracking-tight">Lokadjaya</span>
-    </a>
-    <div class="hidden md:flex items-center gap-8">
-      <a href="#menu" class="nav-link text-white/80 hover:text-white text-sm font-medium">Menu</a>
-      <a href="#fasilitas" class="nav-link text-white/80 hover:text-white text-sm font-medium">Fasilitas</a>
-      <a href="#testimoni" class="nav-link text-white/80 hover:text-white text-sm font-medium">Testimoni</a>
-      <a href="#lokasi" class="nav-link text-white/80 hover:text-white text-sm font-medium">Lokasi</a>
-      <a href="https://wa.me/6281234567890?text=Halo%20Lokadjaya%2C%20saya%20mau%20pesan%20meja" target="_blank"
-         class="btn-primary !py-2.5 !px-5 !text-sm">💬 Pesan Meja</a>
-    </div>
-    <button class="md:hidden text-white p-2" @click="$store.nav.toggleMobile()">
-      <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-        <path x-show="!$store.nav.mobileOpen" stroke-linecap="round" d="M4 6h16M4 12h16M4 18h16"/>
-        <path x-show="$store.nav.mobileOpen" stroke-linecap="round" d="M6 18L18 6M6 6l12 12"/>
-      </svg>
-    </button>
-  </div>
-</nav>
+<body x-data="auth" @logout.window="logout()">
 
-<!-- Mobile Menu -->
-<div class="mobile-menu-overlay" :class="$store.nav.mobileOpen && 'active'" @click="$store.nav.closeMobile()"></div>
-<div class="mobile-menu" :class="$store.nav.mobileOpen && 'active'">
-  <a href="#menu" @click="$store.nav.closeMobile()">🍜 Menu Juara</a>
-  <a href="#fasilitas" @click="$store.nav.closeMobile()">🎮 Fasilitas</a>
-  <a href="#testimoni" @click="$store.nav.closeMobile()">⭐ Testimoni</a>
-  <a href="#lokasi" @click="$store.nav.closeMobile()">📍 Lokasi</a>
-  <a href="https://wa.me/6281234567890" target="_blank" class="!text-green-400 !border-green-400/30 mt-4">💬 Pesan via WhatsApp</a>
-</div>
+    <!-- Background Effects -->
+    <div class="bg-mesh"></div>
+    <div class="bg-grid"></div>
 
-<!-- ===== HERO SECTION ===== -->
-<section class="hero-section" id="hero">
-  <div class="hero-bg" style="background-image:url('assets/images/hero-bg.png')"></div>
-  <div class="hero-overlay"></div>
-  <div class="hero-particles"></div>
-  <div class="relative z-10 max-w-4xl mx-auto px-4 text-center">
-    <div class="fade-up">
-      <span class="badge-pill glass text-white/90 mb-6 inline-flex">
-        <span>⏰</span> Buka Setiap Hari · 09.00 – 21.00 WIB
-      </span>
-    </div>
-    <h1 class="font-heading font-extrabold text-4xl md:text-5xl lg:text-6xl text-white leading-tight mb-5 text-shadow-lg fade-up fade-up-delay-1">
-      Lebih Dari Sekadar Kedai:<br>
-      <span class="text-terracotta-light">Rasa Autentik</span>, Suasana Asik.
-    </h1>
-    <p class="text-cream/85 text-base md:text-lg max-w-2xl mx-auto mb-8 leading-relaxed fade-up fade-up-delay-2">
-      Spot sarapan dan makan siang paling cozy di Lamongan. Nikmati hidangan lezat mulai jam 09.00 pagi bersama teman atau keluarga.
-    </p>
-    <div class="flex flex-col sm:flex-row gap-4 justify-center fade-up fade-up-delay-3">
-      <a href="https://www.google.com/maps/dir/?api=1&destination=-7.1186,112.4161" target="_blank" class="btn-outline">
-        <span>🗺️</span> Lihat Rute
-      </a>
-      <a href="https://wa.me/6281234567890?text=Halo%20Lokadjaya!" target="_blank" class="btn-primary">
-        <span>💬</span> Pesan via WhatsApp
-      </a>
-    </div>
-  </div>
-</section>
+    <!-- ============================================================ -->
+    <!-- AUTH PAGE (Login / Register) -->
+    <!-- ============================================================ -->
+    <template x-if="!isLoggedIn">
+        <div :class="transitioning && 'page-exit'">
+            <!-- Animated Orbs -->
+            <div class="auth-orb auth-orb-1"></div>
+            <div class="auth-orb auth-orb-2"></div>
+            <div class="auth-orb auth-orb-3"></div>
 
-<!-- ===== BENTO GRID (USP) ===== -->
-<section class="py-16 md:py-24 px-4" id="menu">
-  <div class="max-w-6xl mx-auto">
-    <div class="text-center mb-12 fade-up">
-      <span class="section-label mb-4">✨ Kenapa Lokadjaya?</span>
-      <h2 class="font-heading font-bold text-3xl md:text-4xl text-charcoal mt-4">
-        Bukan Sekadar <span class="text-forest">Tempat Makan</span>
-      </h2>
-      <p class="text-charcoal/60 mt-3 max-w-lg mx-auto">Empat alasan kenapa kamu harus mampir ke Lokadjaya.</p>
-    </div>
+            <div class="auth-wrapper">
+                <div class="auth-card" :class="shaking && 'auth-shake'">
+                    <!-- Logo -->
+                    <div class="auth-logo">
+                        <span class="text-xl font-extrabold" style="color:#020617">ZV</span>
+                    </div>
+                    <h2 class="text-center text-lg font-bold text-white mb-1">ZV Dashboard</h2>
+                    <p class="text-center text-xs text-slate-500 mb-6">Financial Management System</p>
 
-    <div class="bento-grid" id="fasilitas">
-      <!-- Card 1: Menu Juara -->
-      <div class="bento-card bento-large fade-up fade-up-delay-1">
-        <div class="bento-card-bg" style="background-image:url('assets/images/menu-hero.png')"></div>
-        <div class="bento-card-overlay"></div>
-        <div class="bento-card-content text-white">
-          <div class="bento-icon">🍜</div>
-          <h3 class="font-heading font-bold text-xl mb-2">Menu Juara</h3>
-          <p class="text-white/80 text-sm leading-relaxed mb-3">Racikan bumbu autentik yang bikin nagih. Favorit pelanggan setia kami.</p>
-          <div class="flex items-center gap-2">
-            <div class="stars"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span></div>
-            <span class="text-white/70 text-xs font-medium">4.8/5 Rating</span>
-          </div>
+                    <!-- Tabs -->
+                    <div class="auth-tabs">
+                        <button class="auth-tab" :class="page === 'login' && 'active'"
+                            @click="switchTab('login')">Masuk</button>
+                        <button class="auth-tab" :class="page === 'register' && 'active'"
+                            @click="switchTab('register')">Daftar</button>
+                    </div>
+
+                    <!-- Error Message -->
+                    <div x-show="errorMsg" x-transition class="mb-4 p-3 rounded-lg text-xs font-medium"
+                        style="background:rgba(255,0,127,0.1);border:1px solid rgba(255,0,127,0.2);color:#FF007F;">
+                        <span x-text="errorMsg"></span>
+                    </div>
+
+                    <!-- Success Message -->
+                    <div x-show="successMsg" x-transition class="mb-4 p-3 rounded-lg text-xs font-medium"
+                        style="background:rgba(0,240,255,0.1);border:1px solid rgba(0,240,255,0.2);color:#00F0FF;">
+                        ✅ <span x-text="successMsg"></span>
+                    </div>
+
+                    <!-- === LOGIN FORM === -->
+                    <template x-if="page === 'login'">
+                        <form @submit.prevent="login()" class="auth-form-enter">
+                            <div class="auth-input-group">
+                                <div class="auth-input-icon">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round"
+                                            d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                    </svg>
+                                </div>
+                                <input type="text" x-model="loginForm.username" class="form-input"
+                                    placeholder="Username">
+                            </div>
+                            <div class="auth-input-group">
+                                <div class="auth-input-icon">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round"
+                                            d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                                    </svg>
+                                </div>
+                                <input :type="showPw ? 'text' : 'password'" x-model="loginForm.password"
+                                    class="form-input" placeholder="Password">
+                                <button type="button" class="pw-toggle" @click="showPw = !showPw">
+                                    <svg x-show="!showPw" class="w-4 h-4" fill="none" stroke="currentColor"
+                                        stroke-width="2" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                        <path stroke-linecap="round"
+                                            d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                    </svg>
+                                    <svg x-show="showPw" class="w-4 h-4" fill="none" stroke="currentColor"
+                                        stroke-width="2" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round"
+                                            d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
+                                    </svg>
+                                </button>
+                            </div>
+                            <button type="submit" class="auth-submit auth-submit-login">🔓 Masuk</button>
+                            <p class="text-center text-xs text-slate-600 mt-4">Belum punya akun? <button type="button"
+                                    @click="switchTab('register')"
+                                    class="text-cyan font-semibold hover:underline">Daftar di sini</button></p>
+                        </form>
+                    </template>
+
+                    <!-- === REGISTER FORM === -->
+                    <template x-if="page === 'register'">
+                        <form @submit.prevent="register()" class="auth-form-enter">
+                            <div class="auth-input-group">
+                                <div class="auth-input-icon">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round"
+                                            d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                </div>
+                                <input type="text" x-model="regForm.fullname" class="form-input"
+                                    placeholder="Nama Lengkap">
+                            </div>
+                            <div class="auth-input-group">
+                                <div class="auth-input-icon">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round"
+                                            d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                    </svg>
+                                </div>
+                                <input type="text" x-model="regForm.username" class="form-input"
+                                    placeholder="Username (min 3 karakter)">
+                            </div>
+                            <div class="auth-input-group">
+                                <div class="auth-input-icon">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round"
+                                            d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                                    </svg>
+                                </div>
+                                <input :type="showPw ? 'text' : 'password'" x-model="regForm.password"
+                                    class="form-input" placeholder="Password (min 4 karakter)">
+                                <button type="button" class="pw-toggle" @click="showPw = !showPw">
+                                    <svg x-show="!showPw" class="w-4 h-4" fill="none" stroke="currentColor"
+                                        stroke-width="2" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                        <path stroke-linecap="round"
+                                            d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                    </svg>
+                                    <svg x-show="showPw" class="w-4 h-4" fill="none" stroke="currentColor"
+                                        stroke-width="2" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round"
+                                            d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
+                                    </svg>
+                                </button>
+                            </div>
+                            <!-- Strength Meter -->
+                            <div class="mb-4 -mt-2" x-show="regForm.password.length > 0" x-transition>
+                                <div class="strength-bar">
+                                    <div class="strength-fill"
+                                        :style="`width:${passwordStrength().width};background:${passwordStrength().color}`">
+                                    </div>
+                                </div>
+                                <p class="text-xs mt-1" :style="`color:${passwordStrength().color}`"
+                                    x-text="passwordStrength().label"></p>
+                            </div>
+                            <div class="auth-input-group">
+                                <div class="auth-input-icon">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round"
+                                            d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                                    </svg>
+                                </div>
+                                <input :type="showPwConfirm ? 'text' : 'password'" x-model="regForm.confirmPassword"
+                                    class="form-input" placeholder="Konfirmasi Password">
+                                <button type="button" class="pw-toggle" @click="showPwConfirm = !showPwConfirm">
+                                    <svg x-show="!showPwConfirm" class="w-4 h-4" fill="none" stroke="currentColor"
+                                        stroke-width="2" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                        <path stroke-linecap="round"
+                                            d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                    </svg>
+                                    <svg x-show="showPwConfirm" class="w-4 h-4" fill="none" stroke="currentColor"
+                                        stroke-width="2" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round"
+                                            d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
+                                    </svg>
+                                </button>
+                            </div>
+                            <button type="submit" class="auth-submit auth-submit-register">🚀 Buat Akun</button>
+                            <p class="text-center text-xs text-slate-600 mt-4">Sudah punya akun? <button type="button"
+                                    @click="switchTab('login')" class="text-cyan font-semibold hover:underline">Masuk di
+                                    sini</button></p>
+                        </form>
+                    </template>
+                </div>
+            </div>
         </div>
-      </div>
+    </template>
 
-      <!-- Card 2: Playbox Corner -->
-      <div class="bento-card bento-large fade-up fade-up-delay-2">
-        <div class="bento-card-bg" style="background-image:url('assets/images/playbox.png')"></div>
-        <div class="bento-card-overlay"></div>
-        <div class="bento-card-content text-white">
-          <div class="bento-icon">🎮</div>
-          <h3 class="font-heading font-bold text-xl mb-2">Playbox Corner</h3>
-          <p class="text-white/80 text-sm leading-relaxed">Bukan cuma makan. Ajak teman main PS sambil nunggu pesanan!</p>
-        </div>
-      </div>
+    <!-- ============================================================ -->
+    <!-- DASHBOARD (shown after login) -->
+    <!-- ============================================================ -->
+    <template x-if="isLoggedIn">
+        <div x-data="dashboard">
 
-      <!-- Card 3: Harga Pelajar -->
-      <div class="bento-card bento-small fade-up fade-up-delay-3" style="background:linear-gradient(135deg,#2D5A27,#3A7533)">
-        <div class="bento-card-content text-white">
-          <div class="bento-icon">💰</div>
-          <h3 class="font-heading font-bold text-xl mb-2">Harga Pelajar</h3>
-          <p class="text-white/80 text-sm leading-relaxed">Menu lengkap mulai dari <span class="font-bold text-cream text-lg">Rp 5.000</span>. Kantong pelajar aman!</p>
-        </div>
-      </div>
+            <!-- Toast Notification -->
+            <div class="toast"
+                :class="[toastVisible && 'show', toastType === 'success' ? 'toast-success' : 'toast-error']"
+                x-text="toastMsg"></div>
 
-      <!-- Card 4: Lokasi Strategis -->
-      <div class="bento-card bento-small fade-up fade-up-delay-4" style="background:linear-gradient(135deg,#CC5500,#E86B10)">
-        <div class="bento-card-content text-white">
-          <div class="bento-icon">📍</div>
-          <h3 class="font-heading font-bold text-xl mb-2">Lokasi Strategis</h3>
-          <p class="text-white/80 text-sm leading-relaxed mb-3">Plosowahyu, Lamongan. Gampang dijangkau dari mana aja.</p>
-          <a href="https://www.google.com/maps/dir/?api=1&destination=-7.1186,112.4161" target="_blank" class="inline-flex items-center gap-1.5 text-white text-xs font-semibold bg-white/20 rounded-full px-3 py-1.5 hover:bg-white/30 transition-all">
-            🗺️ Lihat di Maps
-          </a>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
+            <!-- ===== MAIN CONTAINER ===== -->
+            <div class="relative z-10 max-w-7xl mx-auto px-4 py-6 md:py-8">
 
-<!-- ===== SOCIAL PROOF (TESTIMONI) ===== -->
-<section class="py-16 md:py-24 px-4 bg-sand/40" id="testimoni" x-data="carousel">
-  <div class="max-w-5xl mx-auto">
-    <div class="text-center mb-12 fade-up">
-      <span class="section-label mb-4">⭐ Social Proof</span>
-      <h2 class="font-heading font-bold text-3xl md:text-4xl text-charcoal mt-4">
-        Kata Mereka yang Sudah <span class="text-forest">Mampir</span>
-      </h2>
-    </div>
-    <div class="overflow-hidden rounded-2xl fade-up fade-up-delay-1"
-         @touchstart="handleTouchStart($event)"
-         @touchend="handleTouchEnd($event)"
-         @mouseenter="stopAutoplay()"
-         @mouseleave="restartAutoplay()">
-      <div class="testimonial-track" :style="`transform:${getTranslateX()}`">
-        <!-- Review 1 -->
-        <div class="testimonial-card">
-          <div class="stars"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span></div>
-          <p class="testimonial-quote">"Tempatnya cozy, harga terjangkau. Cocok buat nongkrong bareng temen sambil makan enak."</p>
-          <div class="testimonial-author">
-            <div class="testimonial-avatar bg-forest"><span>JL</span></div>
-            <div><p class="font-semibold text-charcoal text-sm">Jiddan Labib</p><p class="text-xs text-charcoal/50">📍 Google Maps Review</p></div>
-          </div>
-        </div>
-        <!-- Review 2 -->
-        <div class="testimonial-card">
-          <div class="stars"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span></div>
-          <p class="testimonial-quote">"Sangat memuaskan pelanggan 👍 Porsi besar, rasa juara, tempatnya juga bersih."</p>
-          <div class="testimonial-author">
-            <div class="testimonial-avatar bg-terracotta"><span>R</span></div>
-            <div><p class="font-semibold text-charcoal text-sm">Rafian</p><p class="text-xs text-charcoal/50">📍 Google Maps Review</p></div>
-          </div>
-        </div>
-        <!-- Review 3 -->
-        <div class="testimonial-card">
-          <div class="stars"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span></div>
-          <p class="testimonial-quote">"Menu variatif, porsi pas, harga bersahabat. Apalagi ada Playbox-nya, anak-anak betah!"</p>
-          <div class="testimonial-author">
-            <div class="testimonial-avatar bg-forest-light"><span>AS</span></div>
-            <div><p class="font-semibold text-charcoal text-sm">Andi Susanto</p><p class="text-xs text-charcoal/50">📍 Google Maps Review</p></div>
-          </div>
-        </div>
-        <!-- Review 4 -->
-        <div class="testimonial-card">
-          <div class="stars"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star text-charcoal/20">★</span></div>
-          <p class="testimonial-quote">"Tempatnya enak buat nongkrong bareng temen. Makanannya enak dan murah meriah!"</p>
-          <div class="testimonial-author">
-            <div class="testimonial-avatar bg-terracotta-light"><span>DN</span></div>
-            <div><p class="font-semibold text-charcoal text-sm">Dewi Nurhasanah</p><p class="text-xs text-charcoal/50">📍 Google Maps Review</p></div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <!-- Dots & Arrows -->
-    <div class="flex items-center justify-center gap-3 mt-8 fade-up fade-up-delay-2">
-      <button @click="prev(); restartAutoplay()" class="w-9 h-9 rounded-full bg-white border border-sand flex items-center justify-center hover:bg-forest hover:text-white hover:border-forest transition-all text-charcoal/60">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" d="M15 19l-7-7 7-7"/></svg>
-      </button>
-      <template x-for="i in total" :key="i">
-        <button class="dot-indicator" :class="current === i-1 && 'active'" @click="goTo(i-1)"></button>
-      </template>
-      <button @click="next(); restartAutoplay()" class="w-9 h-9 rounded-full bg-white border border-sand flex items-center justify-center hover:bg-forest hover:text-white hover:border-forest transition-all text-charcoal/60">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" d="M9 5l7 7-7 7"/></svg>
-      </button>
-    </div>
-  </div>
-</section>
+                <!-- ===== HEADER ===== -->
+                <header class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8 fade-in">
+                    <div class="flex items-center gap-3">
+                        <div
+                            class="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan to-cyan/60 flex items-center justify-center shadow-lg shadow-cyan/20">
+                            <span class="text-deep font-extrabold text-lg">ZV</span>
+                        </div>
+                        <div>
+                            <h1 class="text-xl font-bold tracking-tight text-white">ZV Dashboard</h1>
+                            <p class="text-xs text-slate-500">Selamat datang, <span class="text-cyan font-semibold"
+                                    x-text="$store.authUser.fullname || 'User'"></span></p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <div class="glass-panel px-4 py-2.5 flex items-center gap-2">
+                            <span class="text-xs text-slate-500 uppercase tracking-wider">Saldo Kas</span>
+                            <span class="mono font-bold text-sm" :class="allTimeSaldo >= 0 ? 'text-cyan' : 'text-rose'"
+                                x-text="formatRp(allTimeSaldo)"></span>
+                        </div>
+                        <div class="toggle-group">
+                            <button class="toggle-btn" :class="filter === 'today' && 'active'"
+                                @click="setFilter('today')">Hari
+                                Ini</button>
+                            <button class="toggle-btn" :class="filter === 'month' && 'active'"
+                                @click="setFilter('month')">Bulan</button>
+                            <button class="toggle-btn" :class="filter === 'year' && 'active'"
+                                @click="setFilter('year')">Tahun</button>
+                        </div>
+                        <!-- User Badge + Logout -->
+                        <div class="user-badge" @click="$dispatch('logout')" title="Logout">
+                            <div class="user-avatar" x-text="$store.authUser.initials || '?'"></div>
+                            <svg class="w-3.5 h-3.5 text-slate-500" fill="none" stroke="currentColor" stroke-width="2"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round"
+                                    d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                            </svg>
+                        </div>
+                    </div>
+                </header>
 
-<!-- ===== FOOTER / LOKASI ===== -->
-<section class="py-16 md:py-24 px-4 bg-forest-dark" id="lokasi">
-  <div class="max-w-5xl mx-auto">
-    <div class="text-center mb-12 fade-up">
-      <span class="section-label !bg-white/10 !text-cream mb-4">📍 Temukan Kami</span>
-      <h2 class="font-heading font-bold text-3xl md:text-4xl text-white mt-4">Yuk, Mampir ke Lokadjaya!</h2>
-    </div>
-    <div class="grid md:grid-cols-3 gap-5 mb-10">
-      <div class="info-card !bg-white/5 !border-white/10 text-center fade-up fade-up-delay-1">
-        <div class="text-3xl mb-3">🕐</div>
-        <h4 class="font-heading font-bold text-white text-sm mb-1">Jam Buka</h4>
-        <p class="text-cream/70 text-sm">Setiap Hari<br><span class="font-semibold text-cream">09.00 – 21.00 WIB</span></p>
-      </div>
-      <div class="info-card !bg-white/5 !border-white/10 text-center fade-up fade-up-delay-2">
-        <div class="text-3xl mb-3">📍</div>
-        <h4 class="font-heading font-bold text-white text-sm mb-1">Alamat</h4>
-        <p class="text-cream/70 text-sm">Jl. Raya Plosowahyu<br><span class="font-semibold text-cream">Lamongan, Jawa Timur</span></p>
-      </div>
-      <div class="info-card !bg-white/5 !border-white/10 text-center fade-up fade-up-delay-3">
-        <div class="text-3xl mb-3">📞</div>
-        <h4 class="font-heading font-bold text-white text-sm mb-1">Kontak</h4>
-        <p class="text-cream/70 text-sm">WhatsApp<br><span class="font-semibold text-cream">0812-3456-7890</span></p>
-      </div>
-    </div>
-    <!-- Map Embed -->
-    <div class="rounded-2xl overflow-hidden mb-8 fade-up" style="border:3px solid rgba(255,255,255,0.1)">
-      <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15820.0!2d112.4161!3d-7.1186!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zN8KwMDcnMDcuMCJTIDExMsKwMjQnNTguMCJF!5e0!3m2!1sid!2sid!4v1" width="100%" height="280" style="border:0" allowfullscreen loading="lazy" class="w-full"></iframe>
-    </div>
-    <!-- Route CTA -->
-    <div class="fade-up fade-up-delay-1">
-      <a href="https://www.google.com/maps/dir/?api=1&destination=-7.1186,112.4161" target="_blank" class="btn-route">
-        🗺️ Buka Rute ke Lokadjaya
-      </a>
-    </div>
-  </div>
-</section>
+                <!-- ===== KPI CARDS (Top Row) ===== -->
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+                    <!-- Income -->
+                    <div class="glass-panel kpi-card kpi-income glow-cyan fade-in fade-delay-1">
+                        <div class="flex items-start justify-between mb-3">
+                            <div>
+                                <p class="text-xs font-medium text-slate-500 uppercase tracking-wider mb-1">Total
+                                    Pemasukan</p>
+                                <p class="kpi-value text-cyan" x-text="formatRp(totalIncome)"></p>
+                            </div>
+                            <div class="kpi-icon bg-cyan-dim">
+                                <svg class="w-5 h-5 text-cyan" fill="none" stroke="currentColor" stroke-width="2.5"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" d="M7 17l9.2-9.2M17 17V7H7" />
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="arrow-up">
+                            <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                                <path
+                                    d="M5.293 9.707a1 1 0 010-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 01-1.414 1.414L11 7.414V15a1 1 0 11-2 0V7.414L6.707 9.707a1 1 0 01-1.414 0z" />
+                            </svg>
+                            <span>Income</span>
+                        </div>
+                    </div>
 
-<!-- Footer Bottom -->
-<footer class="bg-charcoal py-6 px-4 text-center">
-  <p class="text-white/40 text-xs">© 2026 Lokadjaya. Crafted with ❤️ di Lamongan.</p>
-</footer>
+                    <!-- Expense -->
+                    <div class="glass-panel kpi-card kpi-expense glow-rose fade-in fade-delay-2">
+                        <div class="flex items-start justify-between mb-3">
+                            <div>
+                                <p class="text-xs font-medium text-slate-500 uppercase tracking-wider mb-1">Total
+                                    Pengeluaran
+                                </p>
+                                <p class="kpi-value text-rose" x-text="formatRp(totalExpense)"></p>
+                            </div>
+                            <div class="kpi-icon bg-rose-dim">
+                                <svg class="w-5 h-5 text-rose" fill="none" stroke="currentColor" stroke-width="2.5"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" d="M17 7l-9.2 9.2M7 7v10h10" />
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="arrow-down">
+                            <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                                <path
+                                    d="M14.707 10.293a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 111.414-1.414L9 12.586V5a1 1 0 012 0v7.586l2.293-2.293a1 1 0 011.414 0z" />
+                            </svg>
+                            <span>Expense</span>
+                        </div>
+                    </div>
 
-<!-- ===== FAB WHATSAPP ===== -->
-<a href="https://wa.me/6281234567890?text=Halo%20Lokadjaya%2C%20saya%20mau%20tanya%20menu%20%2F%20pesan%20meja" target="_blank" class="fab-whatsapp" id="fab-wa">
-  <span class="fab-pulse"></span>
-  <svg class="w-6 h-6 flex-shrink-0" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-  <span class="fab-text font-semibold">Pesan Meja / Tanya Menu</span>
-</a>
+                    <!-- Net Balance -->
+                    <div class="glass-panel kpi-card kpi-balance glow-amber fade-in fade-delay-3">
+                        <div class="flex items-start justify-between mb-3">
+                            <div>
+                                <p class="text-xs font-medium text-slate-500 uppercase tracking-wider mb-1">Net Balance
+                                </p>
+                                <p class="kpi-value" :class="netBalance >= 0 ? 'text-emerald' : 'text-rose'"
+                                    x-text="(netBalance >= 0 ? '+' : '-') + formatRp(netBalance)"></p>
+                            </div>
+                            <div class="kpi-icon" :class="netBalance >= 0 ? 'bg-emerald/15' : 'bg-rose-dim'">
+                                <svg class="w-5 h-5" :class="netBalance >= 0 ? 'text-emerald' : 'text-rose'" fill="none"
+                                    stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round"
+                                        d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                                </svg>
+                            </div>
+                        </div>
+                        <p class="text-xs text-slate-500">Profit/Loss Periode Ini</p>
+                    </div>
+                </div>
 
-<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-<script src="js/app.js"></script>
+                <!-- ===== YEARLY SUMMARY BAR ===== -->
+                <div class="glass-panel p-4 mb-6 fade-in fade-delay-3" style="border-left: 3px solid #FBBF24;">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                        <div class="flex items-center gap-3">
+                            <span class="text-amber text-lg">📅</span>
+                            <span class="text-sm font-semibold text-white">Rekap Tahunan</span>
+                            <div class="flex items-center gap-1 ml-1">
+                                <button @click="prevYear()"
+                                    class="w-7 h-7 rounded-lg flex items-center justify-center text-slate-400 hover:text-white hover:bg-white/10 transition-all"
+                                    title="Tahun sebelumnya">
+                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" d="M15 19l-7-7 7-7" />
+                                    </svg>
+                                </button>
+                                <span class="mono text-amber font-bold text-sm px-2" x-text="selectedYear"></span>
+                                <button @click="nextYear()"
+                                    class="w-7 h-7 rounded-lg flex items-center justify-center text-slate-400 hover:text-white hover:bg-white/10 transition-all"
+                                    title="Tahun berikutnya">
+                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5"
+                                        viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" d="M9 5l7 7-7 7" />
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="flex flex-wrap items-center gap-4 sm:gap-6 text-xs">
+                            <div class="flex items-center gap-2">
+                                <span class="w-2 h-2 rounded-full bg-cyan"></span>
+                                <span class="text-slate-400">Pemasukan:</span>
+                                <span class="mono font-bold text-cyan" x-text="formatRp(yearlyIncome)"></span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span class="w-2 h-2 rounded-full bg-rose"></span>
+                                <span class="text-slate-400">Pengeluaran:</span>
+                                <span class="mono font-bold text-rose" x-text="formatRp(yearlyExpense)"></span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span class="w-2 h-2 rounded-full bg-emerald"></span>
+                                <span class="text-slate-400">Sisa:</span>
+                                <span class="mono font-bold" :class="yearlyBalance >= 0 ? 'text-emerald' : 'text-rose'"
+                                    x-text="(yearlyBalance >= 0 ? '+' : '-') + formatRp(yearlyBalance)"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ===== CHARTS (Middle Row) ===== -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-6">
+                    <!-- Line Chart (2/3) -->
+                    <div class="lg:col-span-2 glass-panel p-5 fade-in fade-delay-4">
+                        <div class="flex items-center justify-between mb-4">
+                            <div>
+                                <h3 class="text-sm font-semibold text-white">Arus Kas</h3>
+                                <p class="text-xs text-slate-500">Pemasukan vs Pengeluaran</p>
+                            </div>
+                            <div class="flex items-center gap-3 text-xs">
+                                <span class="flex items-center gap-1.5"><span
+                                        class="w-2.5 h-2.5 rounded-full bg-cyan"></span>
+                                    Masuk</span>
+                                <span class="flex items-center gap-1.5"><span
+                                        class="w-2.5 h-2.5 rounded-full bg-rose"></span>
+                                    Keluar</span>
+                            </div>
+                        </div>
+                        <div class="chart-container" style="height:280px">
+                            <canvas id="lineChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Doughnut Chart (1/3) -->
+                    <div class="glass-panel p-5 fade-in fade-delay-5">
+                        <div class="mb-4">
+                            <h3 class="text-sm font-semibold text-white">Kategori Pengeluaran</h3>
+                            <p class="text-xs text-slate-500">Top spending categories</p>
+                        </div>
+                        <div class="chart-container flex items-center justify-center" style="height:180px">
+                            <canvas id="doughnutChart"></canvas>
+                        </div>
+                        <!-- Legend -->
+                        <div class="mt-4 space-y-2">
+                            <template x-for="(item, i) in spendingByCategory.slice(0, 5)" :key="item.category">
+                                <div class="flex items-center justify-between text-xs">
+                                    <div class="flex items-center gap-2">
+                                        <span class="w-2.5 h-2.5 rounded-full flex-shrink-0"
+                                            :style="`background:${['#FF007F','#00F0FF','#FBBF24','#34D399','#A78BFA'][i]}`"></span>
+                                        <span class="text-slate-400" x-text="item.category"></span>
+                                    </div>
+                                    <span class="mono text-slate-300 font-medium" x-text="formatRp(item.amount)"></span>
+                                </div>
+                            </template>
+                            <template x-if="spendingByCategory.length === 0">
+                                <p class="text-xs text-slate-600 text-center py-2">Belum ada pengeluaran</p>
+                            </template>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ===== BOTTOM ROW: Form + Recent Activity ===== -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+
+                    <!-- Quick Action Form (1/3) -->
+                    <div class="glass-panel p-5 fade-in fade-delay-5">
+                        <div class="flex items-center justify-between mb-5">
+                            <div>
+                                <h3 class="text-sm font-semibold text-white">Input Cepat</h3>
+                                <p class="text-xs text-slate-500">Catat transaksi baru</p>
+                            </div>
+                            <span class="text-lg">⚡</span>
+                        </div>
+
+                        <form @submit.prevent="addTransaction()" class="space-y-4">
+                            <!-- Type Toggle -->
+                            <div>
+                                <label class="form-label">Tipe Transaksi</label>
+                                <div class="grid grid-cols-2 gap-2">
+                                    <button type="button" @click="form.type = 'in'"
+                                        class="py-2.5 rounded-lg text-xs font-semibold border transition-all text-center"
+                                        :class="form.type === 'in' ? 'bg-cyan-dim border-cyan/30 text-cyan' : 'bg-transparent border-white/8 text-slate-500 hover:border-white/15'">
+                                        ↑ Pemasukan
+                                    </button>
+                                    <button type="button" @click="form.type = 'out'"
+                                        class="py-2.5 rounded-lg text-xs font-semibold border transition-all text-center"
+                                        :class="form.type === 'out' ? 'bg-rose-dim border-rose/30 text-rose' : 'bg-transparent border-white/8 text-slate-500 hover:border-white/15'">
+                                        ↓ Pengeluaran
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Description -->
+                            <div>
+                                <label class="form-label">Deskripsi</label>
+                                <input type="text" x-model="form.desc" class="form-input"
+                                    placeholder="Contoh: Beli bahan baku...">
+                            </div>
+
+                            <!-- Amount -->
+                            <div>
+                                <label class="form-label">Nominal (Rp)</label>
+                                <input type="number" x-model="form.amount" class="form-input mono" placeholder="0"
+                                    min="0">
+                            </div>
+
+                            <!-- Category -->
+                            <div>
+                                <label class="form-label">Kategori</label>
+                                <select x-model="form.category" class="form-input form-select">
+                                    <template x-for="cat in categories" :key="cat">
+                                        <option :value="cat" x-text="cat"></option>
+                                    </template>
+                                </select>
+                            </div>
+
+                            <!-- Date -->
+                            <div>
+                                <label class="form-label">Tanggal Transaksi</label>
+                                <input type="date" x-model="form.date" class="form-input mono">
+                            </div>
+
+                            <button type="submit" class="btn-submit">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" d="M12 4v16m8-8H4" />
+                                </svg>
+                                Simpan Transaksi
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Recent Activity Table (2/3) -->
+                    <div class="lg:col-span-2 glass-panel p-5 fade-in fade-delay-6">
+                        <div class="flex items-center justify-between mb-5">
+                            <div>
+                                <h3 class="text-sm font-semibold text-white">Aktivitas Terbaru</h3>
+                                <p class="text-xs text-slate-500">Riwayat transaksi periode ini</p>
+                            </div>
+                            <button @click="resetAllData()"
+                                class="text-xs text-slate-600 hover:text-rose transition-colors px-2 py-1 rounded hover:bg-rose-dim">Reset
+                                Data</button>
+                        </div>
+
+                        <div class="overflow-x-auto -mx-5 px-5">
+                            <template x-if="recentTransactions.length > 0">
+                                <table class="tx-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Deskripsi</th>
+                                            <th>Kategori</th>
+                                            <th>Tanggal</th>
+                                            <th class="text-right">Nominal</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <template x-for="tx in recentTransactions" :key="tx.id">
+                                            <tr>
+                                                <td>
+                                                    <div class="flex items-center gap-2.5">
+                                                        <span class="tx-badge"
+                                                            :class="tx.type === 'in' ? 'tx-badge-in' : 'tx-badge-out'"
+                                                            x-text="tx.type === 'in' ? '↑' : '↓'"></span>
+                                                        <span class="text-slate-200 font-medium text-sm"
+                                                            x-text="tx.desc"></span>
+                                                    </div>
+                                                </td>
+                                                <td><span class="cat-tag" x-text="tx.category"></span></td>
+                                                <td class="text-slate-500 text-xs mono" x-text="formatTime(tx.date)">
+                                                </td>
+                                                <td class="text-right">
+                                                    <span class="mono font-semibold text-sm"
+                                                        :class="tx.type === 'in' ? 'text-cyan' : 'text-rose'"
+                                                        x-text="(tx.type === 'in' ? '+' : '-') + formatRp(tx.amount)"></span>
+                                                </td>
+                                                <td>
+                                                    <button class="btn-delete" @click="deleteTransaction(tx.id)"
+                                                        title="Hapus">
+                                                        <svg class="w-4 h-4" fill="none" stroke="currentColor"
+                                                            stroke-width="2" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round"
+                                                                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                                        </svg>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        </template>
+                                    </tbody>
+                                </table>
+                            </template>
+
+                            <template x-if="recentTransactions.length === 0">
+                                <div class="empty-state">
+                                    <div class="empty-state-icon">📭</div>
+                                    <p class="text-sm text-slate-500 mb-1">Belum ada transaksi</p>
+                                    <p class="text-xs text-slate-600">Mulai catat pemasukan atau pengeluaranmu di form
+                                        sebelah.
+                                    </p>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Footer -->
+                <footer class="mt-10 pb-4 text-center">
+                    <p class="text-xs text-slate-700">ZV Dashboard v1.0 — Built with 🧠 by Senior Web Architect</p>
+                </footer>
+            </div>
+
+        </div><!-- end x-data="dashboard" -->
+    </template><!-- end isLoggedIn -->
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <script src="js/app.js"></script>
 </body>
+
 </html>
